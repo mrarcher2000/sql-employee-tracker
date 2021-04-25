@@ -2,6 +2,8 @@ const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 const mainMenu = require('./lib/mainMenu.js');
+const addDepartment = require('./lib/add-department.js');
+const { allowedNodeEnvironmentFlags } = require('node:process');
 
 const db = mysql.createConnection(
     {
@@ -108,6 +110,25 @@ const transitionFunc = function() {
 };
 
 
+const addDepartmentFunc = function() {
+    inquirer.prompt(addDepartment).then(answers => {
+        let name = answers.name;
+        db.execute(
+            `INSERT INTO department (name) VALUES (?);`,
+            [`${name}`],
+            function (err, results) {
+                if (err) throw err;
+                console.log(results);
+            }
+        );
+
+
+        console.log(`Department successfully added to database!`);
+        transitionFunc;
+    })
+};
+
+
 const mainMenuFunc = function() {
     inquirer
     .prompt(mainMenu).then(answer => {
@@ -122,6 +143,14 @@ const mainMenuFunc = function() {
 
         if (answer.mainMenu === "View All Employees") {
             viewAllEmployees();
+        }
+
+        if (answer.mainMenu === "Add a Department") {
+            addDepartmentFunc();
+        }
+
+        if (answer.mainMenu === "Add a Role") {
+            addRole();
         }
     });
 };
