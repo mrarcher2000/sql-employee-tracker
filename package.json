@@ -1,0 +1,24 @@
+{
+  "name": "sql-employee-tracker",
+  "version": "1.0.0",
+  "description": "Keep track of employees by using MySQL Database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrarcher2000/sql-employee-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrarcher2000/sql-employee-tracker/issues"
+  },
+  "homepage": "https://github.com/mrarcher2000/sql-employee-tracker#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "inquirer": "^8.0.0",
+    "mysql2": "^2.2.5"
+  }
+}
