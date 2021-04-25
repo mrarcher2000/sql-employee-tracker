@@ -3,7 +3,7 @@ const inquirer = require('inquirer');
 const cTable = require('console.table');
 const mainMenu = require('./lib/mainMenu.js');
 const addDepartment = require('./lib/add-department.js');
-const { allowedNodeEnvironmentFlags } = require('node:process');
+const addRole = require('./lib/add-role.js');
 
 const db = mysql.createConnection(
     {
@@ -129,6 +129,28 @@ const addDepartmentFunc = function() {
 };
 
 
+const addRoleFunc = function() {
+    inquirer.prompt(addRole).then(answers => {
+        let name = answers.name;
+        let salary = answers.salary;
+        let department_id = answers.department_id;
+
+        db.execute(
+            `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?);`,
+            [`${name}`, salary, department_id],
+            function (err, results) {
+                if (err) throw err;
+                console.log(results);
+            }
+        );
+
+
+        console.log('Role successfully added!');
+        transitionFunc();
+    })
+};
+
+
 const mainMenuFunc = function() {
     inquirer
     .prompt(mainMenu).then(answer => {
@@ -150,7 +172,7 @@ const mainMenuFunc = function() {
         }
 
         if (answer.mainMenu === "Add a Role") {
-            addRole();
+            addRoleFunc();
         }
     });
 };
