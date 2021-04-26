@@ -14,6 +14,8 @@
 
 This application is a basic employee tracking tool that uses the command line to keep track of company roles, departments, as well as individual employees. It stores the information in a database using MySQL to create and store information relevant to the employees and managers in a company. 
 
+To view a quick video walkthrough of the application look, visit https://drive.google.com/file/d/1x3Ntg6hdrPuybVJMwYnACq7cKRHIEM18/view. 
+
 ## Installation
 
 This project requires Node.js and MySQL to run correctly. 
