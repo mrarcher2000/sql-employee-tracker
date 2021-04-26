@@ -4,6 +4,8 @@ const cTable = require('console.table');
 const mainMenu = require('./lib/mainMenu.js');
 const addDepartment = require('./lib/add-department.js');
 const addRole = require('./lib/add-role.js');
+const addEmployee = require('./lib/add-employee.js');
+const updateEmployeeRole = require('./lib/update-employee-role.js');
 
 const db = mysql.createConnection(
     {
@@ -99,27 +101,12 @@ const viewAllRoles = function() {
     )
 };
 
-const transitionFunc = function() {
-    inquirer.prompt([{
-        type: 'confirm',
-        name: 'transition',
-        message: 'To return to the Main Menu, press "Enter".'
-    }]).then(answers => {
-        if (answers) {mainMenuFunc();};
-    });
-};
-
-
 const addDepartmentFunc = function() {
     inquirer.prompt(addDepartment).then(answers => {
         let name = answers.name;
         db.execute(
             `INSERT INTO department (name) VALUES (?);`,
-            [`${name}`],
-            function (err, results) {
-                if (err) throw err;
-                console.log(results);
-            }
+            [`${name}`]
         );
 
 
@@ -137,17 +124,54 @@ const addRoleFunc = function() {
 
         db.execute(
             `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?);`,
-            [`${name}`, salary, department_id],
-            function (err, results) {
-                if (err) throw err;
-                console.log(results);
-            }
-        );
+            [`${name}`, salary, department_id]);
 
 
         console.log('Role successfully added!');
         transitionFunc();
     })
+};
+
+
+const addEmployeeFunc = function() {
+    inquirer.prompt(addEmployee).then(answers => {
+        let firstName = answers.first_name;
+        let lastName = answers.last_name;
+        let roleId = answers.role_id;
+        let managerId = answers.manager_id;
+
+        db.execute(
+            `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?);`,
+            [`${firstName}`, `${lastName}`, roleId, managerId]
+        );
+
+        console.log('Role successfully added!');
+        transitionFunc();
+    })
+};
+
+const updateEmployeeRoleFunc = function() {
+    inquirer.prompt(updateEmployeeRole).then(answers =>{
+        let employeeId = answers.employee_id;
+        let roleId = answers.role_id;
+
+        db.execute(
+            `UPDATE employee SET role_id = ? WHERE id = ?;`, 
+            [roleId, employeeId]
+        );
+
+        console.log('Role updated!');
+        transitionFunc();
+    });
+}
+
+const transitionFunc = function() {
+    inquirer.prompt([{
+        type: 'confirm',
+        name: 'transition',
+        message: 'To return to the Main Menu, press "Enter".',
+        default: true
+    }]).then(mainMenuFunc());
 };
 
 
@@ -173,6 +197,19 @@ const mainMenuFunc = function() {
 
         if (answer.mainMenu === "Add a Role") {
             addRoleFunc();
+        }
+
+        if (answer.mainMenu === "Add an Employee") {
+            addEmployeeFunc();
+        }
+
+        if (answer.mainMenu === "Update Employee Role") {
+            updateEmployeeRoleFunc();
+        }
+
+        if (answer.mainMenu === "Exit") {
+            console.log('To quit, press [CTRL] + [C]');
+            return;
         }
     });
 };
